@@ -39,7 +39,7 @@ var Main = React.createClass({
 				.then(function(data){
 					if (data != this.state.results)
 					{
-						console.log("Address", data);
+						console.log("article", data);
 
 						this.setState({
 							results: data

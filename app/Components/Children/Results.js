@@ -16,8 +16,7 @@ var Results = React.createClass({
 				</div>
 				<div className="panel-body text-center">
 
-						<p>{this.props.address}</p>
-
+				<p>{this.props.term}</p>
 				</div>
 			</div>
 

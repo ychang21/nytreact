@@ -37,7 +37,7 @@ var Form = React.createClass({
 		console.log(this.state.end);
 		
 		// Set the parent to have the search term
-		this.props.setTerm(this.state.term);
+		this.props.setTerm([this.state.term, this.state.start, this.state.end]);
 
 	},
 

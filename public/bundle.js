@@ -46,7 +46,7 @@
 
 	'use strict';
 
-	// Include the Main React Dependencies
+	; // Include the Main React Dependencies
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
 
@@ -19776,15 +19776,19 @@
 		getInitialState: function getInitialState() {
 			return {
 				searchTerm: "",
-				results: "",
+				searchStart: "",
+				searchEnd: "",
+				results: [],
 				history: [] /*Note how we added in this history state variable*/
 			};
 		},
 
 		// This function allows childrens to update the parent.
-		setTerm: function setTerm(term) {
+		setTerm: function setTerm(term, start, end) {
 			this.setState({
-				searchTerm: term
+				searchTerm: term,
+				searchStart: start,
+				searchEnd: end
 			});
 		},
 
@@ -19931,6 +19935,7 @@
 			var newState = {};
 			newState[event.target.id] = event.target.value;
 			this.setState(newState);
+			console.log("New State: " + newState);
 		},
 
 		// When a user submits... 
@@ -19979,7 +19984,7 @@
 									"Topic"
 								)
 							),
-							React.createElement("input", { type: "text", className: "form-control text-center", id: "term", onChange: this.handleChange, required: true }),
+							React.createElement("input", { type: "text", className: "form-control text-center", id: "term", value: this.state.term, onChange: this.handleChange, required: true }),
 							React.createElement("br", null),
 							React.createElement(
 								"h4",
@@ -20144,17 +20149,22 @@
 	var helpers = {
 
 		runQuery: function runQuery(term, start, end) {
-
 			console.log(term);
 			console.log(start);
 			console.log(end);
-			var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + key + "&q=" + term;
+			var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + key + "&q=" + term[0] + "&begin_date=" + term[1] + "0101" + "&end_date=" + term[2] + "1231";
+			// var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + key + "&q=" + term;
 
-			//  + "&begin_date=" + start + "&end_date=" + end
 			return axios.get(queryURL).then(function (response) {
 
 				console.log(response);
-				return response;
+				var resultsArray = [];
+				for (var i = 0; i < 5; i++) {
+					resultsArray.push({ title: response.data.response.docs[i].headline.main, url: response.data.response.docs[0].web_url });
+					// return response.data.response.docs[0].headline.main;
+					// return response.data.response.docs[0].web_url;
+				}
+				return resultsArray;
 			});
 		},
 
@@ -20169,9 +20179,9 @@
 		},
 
 		// This function posts new searches to our database.
-		postHistory: function postHistory(article) {
+		postHistory: function postHistory(resultsArray) {
 
-			return axios.post('/api', { title: article.title, date: article.date, url: article.url }).then(function (results) {
+			return axios.post('/api', { title: resultsArray.title, date: Date.now(), url: resultsArray.url }).then(function (results) {
 
 				console.log("Posted to MongoDB");
 				return results;

@@ -16,15 +16,19 @@ var Main = React.createClass({
 	getInitialState: function(){
 		return {
 			searchTerm: "",
-			results: "",
+			searchStart: "",
+			searchEnd: "",
+			results: [],
 			history: [] /*Note how we added in this history state variable*/
 		}
 	},	
 
 	// This function allows childrens to update the parent.
-	setTerm: function(term){
+	setTerm: function(term, start, end){
 		this.setState({
-			searchTerm: term
+			searchTerm: term,
+			searchStart: start,
+			searchEnd: end
 		})
 	},
 

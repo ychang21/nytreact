@@ -24,6 +24,7 @@ var Form = React.createClass({
     	var newState = {};
     	newState[event.target.id] = event.target.value;
     	this.setState(newState);
+    	console.log("New State: " + newState);
 
 	},
 
@@ -59,7 +60,7 @@ var Form = React.createClass({
 								{/*Note how each of the form elements has an id that matches the state. This is not necessary but it is convenient.
 									Also note how each has an onChange event associated with our handleChange event. 
 								*/}
-								<input type="text" className="form-control text-center" id="term" onChange= {this.handleChange} required/>
+								<input type="text" className="form-control text-center" id="term" value={this.state.term} onChange= {this.handleChange} required/>
 								<br />
 								<h4 className="">
 				                <strong>Start Year</strong>
